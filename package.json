@@ -1,6 +1,6 @@
 {
   "name": "@amplement/debug-logger",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "A wrapper for visionmedia/debug logger, adding levels and colored output",
   "main": "debug-logger.js",
   "repository": {
