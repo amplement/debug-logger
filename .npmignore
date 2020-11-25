@@ -1,0 +1,5 @@
+.circleci
+.idea
+node_modules
+md5sum.txt
+examples

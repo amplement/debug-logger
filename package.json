@@ -1,11 +1,18 @@
 {
-  "name": "debug-logger",
+  "name": "@amplement/debug-logger",
   "version": "0.4.1",
   "description": "A wrapper for visionmedia/debug logger, adding levels and colored output",
   "main": "debug-logger.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:appscot/debug-logger.git"
+    "url": "git+https://github.com/amplement/debug-logger.git"
+  },
+  "license": "Amplement",
+  "bugs": {
+    "url": "https://github.com/amplement/debug-logger/issues"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "keywords": [
     "debug",
@@ -18,11 +25,7 @@
     "warn",
     "error"
   ],
-  "author": {
-    "name": "Dario Marcelino",
-    "email": "dario@appscot.com"
-  },
-  "license": "MIT",
+  "author": "Amplement",
   "dependencies": {
     "debug": "^4.1.1"
   }

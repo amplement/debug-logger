@@ -1,0 +1,40 @@
+name: Tags
+
+on:
+  push:
+    tags: v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install, audit, test & build
+        run: |
+          npm ci
+      - name: Archive build
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build
+        env:
+          CI: true
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download dist
+        uses: actions/download-artifact@v1
+        with:
+          name: build
+      - name: Publishing @amplement/debug-logger
+        shell: bash
+        run: |
+          echo "registry=https://npm.pkg.github.com/amplement" > .npmrc
+          npm publish
