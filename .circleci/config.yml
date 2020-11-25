@@ -1,0 +1,71 @@
+version: 2
+
+env_setting: &env_setting
+  run:
+    name: Setting Env
+    command: |
+      CHANGELOG_MESSAGE="ci: update CHANGELOG"
+      echo "export CHANGELOG_MESSAGE='$CHANGELOG_MESSAGE'" >> $BASH_ENV
+      echo "CHANGELOG_MESSAGE=$CHANGELOG_MESSAGE"
+
+node-build: &node-build
+  working_directory:  ~/repo
+  docker:
+    - image: circleci/node:10.13.0
+
+attach_root_workspace: &attach_root_workspace
+  attach_workspace:
+    at: .
+
+jobs:
+
+  fetch_dependencies:
+    <<: *node-build
+
+    steps:
+      - checkout
+
+      - *attach_root_workspace
+
+      - run:
+          name: Install dependancies
+          command: npm ci
+
+      - persist_to_workspace:
+          root:  .
+          paths:
+            - .
+
+  publish:
+    <<: *node-build
+
+    steps:
+      - *attach_root_workspace
+
+      - run:
+          name: Publish @amplement/debug-logger
+          command: |
+            sudo npm i -g npm-cli-login
+            npm-cli-login
+            # fix for publishing
+            echo "registry=https://npm.pkg.github.com/amplement" > .npmrc
+            npm publish
+
+workflows:
+  version: 2
+  complete-workflow:
+    jobs:
+      - fetch_dependencies:
+          context: org-global
+          filters:
+            tags:
+              only: /^v?[0-9]+(\.[0-9]+)*/
+      - publish:
+          context: org-global
+          requires:
+            - fetch_dependencies
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v?[0-9]+(\.[0-9]+)*/
